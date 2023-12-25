@@ -4,6 +4,8 @@
 const funcs = require('./funcs.js');
 const sumFunc = funcs.sum;
 const isNumberFunc = funcs.isNumber;
+const timeoutFunc = funcs.timeoutFunc;
+const fetchAPromiseFunc = funcs.fetchAPromise;
 
 
 // toBe used for validating matching strings/nynbers
@@ -30,3 +32,30 @@ test('should throw an error', () => {
         isNumberFunc('bla')
     }).toThrow();
 });
+
+test('callback function should be called with the value in it', finished => {
+    function cbF(data){
+        try {
+            // test if the parameter data which is called inside the timeoutFunc is equal to the given value
+            expect(data).toBe('cb func value1');
+            finished();
+        } catch (e) {
+            finished(e);
+        }
+    }
+    timeoutFunc(cbF);
+});
+
+test('the data should be peanut butter', () => {
+    return expect(fetchAPromiseFunc()).resolves.toBe('peanut butter');
+});
+
+test('the data should throw error', () => {
+    return expect(fetchAPromiseFunc()).rejects.toThrow('error');
+})
+
+// just a cleaner way than promise (above lines) to call asynchonours callback
+test ('the returned value from the callback should be peaunt butter1', async() => {
+    const data = await fetchAPromiseFunc();
+    expect(data).toBe('peaunt butter1')
+})
